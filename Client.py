@@ -9,7 +9,7 @@ def receive(key):
     new_msg = True
     msglen = 0
     while True:
-        msg = ClientSocket.recv(16)
+        msg = ClientSocket.recv(128)
         if new_msg:
             msglen = int(msg[:HEADERSIZE])
             new_msg = False        

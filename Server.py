@@ -14,7 +14,7 @@ def threaded_client(connection):
     msglen = 0
     while True:
         try:
-            msg = connection.recv(16)
+            msg = connection.recv(128)
         except Exception as e:
             print(e)
             exit()
