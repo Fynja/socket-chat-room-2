@@ -8,17 +8,25 @@ def threaded_client(connection):
     global log
     for i in log:
         connection.send(str.encode(i))
-        time.sleep(0.05)
+        time.sleep(0.01)
+    full_msg = ''
+    new_msg = True
+    msglen = 0
     while True:
         try:
-            data = connection.recv(2048)
-            log.append(data.decode("utf-8"))
+            msg = connection.recv(16)
         except Exception as e:
             print(e)
             exit()
-        if not data:
-            break
-        msg_all_clients(data.decode("utf-8"))
+        if new_msg:
+            msglen = int(msg[:HEADERSIZE])
+            new_msg = False        
+        full_msg += msg.decode("utf-8")
+        if len(full_msg)-HEADERSIZE == msglen:
+            msg_all_clients(full_msg)
+            log.append(full_msg)
+            new_msg = True
+            full_msg = ''
     connection.close()
 ###############################################################################
 #reads through clients list and sends a message to each client
@@ -27,6 +35,7 @@ def msg_all_clients(msg):
     global clients
     clientID = 0
     while clientID < len(clients):
+        print(clientID)
         try:
             clients[clientID].send(str.encode(msg))
         except Exception as e:
@@ -53,6 +62,7 @@ ServerSocket.bind((host, port))
 print("Waiting for a Connection..")
 ServerSocket.listen(5)
 #define some variables
+HEADERSIZE = 10
 clients = []
 ThreadCount = 0
 log = []
