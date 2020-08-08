@@ -20,8 +20,12 @@ def threaded_client(connection):
             exit()
         if new_msg:
             msglen = int(msg[:HEADERSIZE])
-            new_msg = False        
-        full_msg += msg.decode("utf-8")
+            new_msg = False 
+        try:
+            full_msg += msg.decode("utf-8")
+        except Exception as decodeerror:
+            print(decodeerror)
+            full_msg += "ERR"
         if len(full_msg)-HEADERSIZE == msglen:
             msg_all_clients(full_msg)
             log.append(full_msg)
