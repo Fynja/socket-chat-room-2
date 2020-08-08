@@ -8,7 +8,7 @@ def threaded_client(connection):
     global log
     for i in log:
         connection.send(str.encode(i))
-        time.sleep(0.01)
+        time.sleep(0.05)
     full_msg = ''
     new_msg = True
     msglen = 0
@@ -35,7 +35,6 @@ def msg_all_clients(msg):
     global clients
     clientID = 0
     while clientID < len(clients):
-        print(clientID)
         try:
             clients[clientID].send(str.encode(msg))
         except Exception as e:
