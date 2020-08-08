@@ -6,11 +6,12 @@ import time
 #it waits for information to be received from a client then calls msg_all_clients to pass that information to other clients
 def threaded_client(connection):
     global log
-    print("Loading old messages....")
+    print("sending message log to client")
     for i in log:
         connection.send(str.encode(i))
+        print(i)
         time.sleep(0.05)
-    print("=======↓NEW MESSAGES↓=======")
+    print("message log sent")
     full_msg = ''
     new_msg = True
     msglen = 0
